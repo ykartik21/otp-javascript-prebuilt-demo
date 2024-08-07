@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            color: #a00808;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+           
+        }
+        
+        .logout-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Next Page!</h1>
+        <p>You have successfully logged in. Here are your details:</p>
+        <table id="userDetailsTable">
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const otplessUser = JSON.parse(localStorage.getItem('otplessUser'));
+            const tableBody = document.querySelector('#userDetailsTable tbody');
+            console.log(otplessUser)
+            function addRow(key, value) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${key}</td><td>${value}</td>`;
+                tableBody.appendChild(row);
+            }
+            
+            for (const [key, value] of Object.entries(otplessUser)) {
+                if (Array.isArray(value)) {
+                    value.forEach((item, index) => {
+                        for (const [subKey, subValue] of Object.entries(item)) {
+                            addRow(`${key}[${index}].${subKey}`, subValue);
+                        }
+                    });
+                } else if (typeof value === 'object' && value !== null) {
+                    for (const [subKey, subValue] of Object.entries(value)) {
+                        addRow(`${key}.${subKey}`, subValue);
+                    }
+                } else {
+                    addRow(key, value);
+                }
+            }
+        });
+
+        function logout() {
+            // Clear session storage
+            localStorage.removeItem('otplessUser');
+            // Redirect to login page
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
