@@ -1,1 +1,1 @@
-# otp-javascript-prebuilt-demo
+# otpless-javascript-prebuilt-demo
